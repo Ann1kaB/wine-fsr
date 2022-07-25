@@ -11,7 +11,7 @@ PER_GAME_CONFIG_FILE="$HOME/.config/${PROG_NAME}/*.conf"
 set_config_file_opts(){
 	_strength="${STRENGTH_PREFIX}=$FSR_STRENGTH"
 	_cmd="${MODE_PREFIX}=$FSR_RESOLUTION"
-	if [ -n $CUSTOM_FSR_RESOLUTION ];then
+	if ! [ -z $CUSTOM_FSR_RESOLUTION ];then
 		_cmd="${CUSTOM_MODE_PREFIX}=$CUSTOM_FSR_RESOLUTION"
 	fi
 }
@@ -97,8 +97,4 @@ export $FSR_ENABLE
 echo "$_cmd
 $_strength
 $FSR_ENABLE"
-#if [[ -n "$@" ]];then
-  exec "$@"
-#else
-#  run_error
-#fi
+exec "$@"
