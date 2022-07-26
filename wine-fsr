@@ -6,7 +6,16 @@ STRENGTH_PREFIX="WINE_FULLSCREEN_FSR_STRENGTH"
 CUSTOM_MODE_PREFIX="WINE_FULLSCREEN_FSR_CUSTOM_MODE"
 PROG_NAME=$(basename $0)
 CONFIG_FILE="$HOME/.config/${PROG_NAME}/${PROG_NAME}.conf"
-PER_GAME_CONFIG_FILE="$HOME/.config/${PROG_NAME}/*.conf"
+PER_GAME_CONFIG_FILE_PATH="$HOME/.config/${PROG_NAME}/"
+PER_GAME_CONFIG_FILES="$HOME/.config/${PROG_NAME}/*"
+
+for _config in $(basename ${PER_GAME_CONFIG_FILES} | cut -d'.' -f1); do
+	if [[ "$@" == *"$_config"* ]]; then
+		game_config_match="${PER_GAME_CONFIG_FILE_PATH}/${_config}.conf"
+		echo $game_config_match
+		break
+	fi
+done
 
 set_config_file_opts(){
 	_strength="${STRENGTH_PREFIX}=$FSR_STRENGTH"
@@ -16,8 +25,8 @@ set_config_file_opts(){
 	fi
 }
 
-if [[ "$@" == *"$PER_GAME_CONFIG_FILE"* ]];then
-	source $PER_GAME_CONFIG_FILE
+if ! [ -z $game_config_match ];then
+	source $game_config_match
 	set_config_file_opts
 elif  [ -f $CONFIG_FILE ];then
 	source $CONFIG_FILE
